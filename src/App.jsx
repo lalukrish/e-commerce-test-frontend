@@ -17,11 +17,12 @@ function App() {
           transition: "margin 0.3s",
           padding: "16px",
           minHeight: "100vh",
+          mt: 12,
         }}
       >
         <Routes>
           <Route path="/home" element={<Home />} />
-          <Route path="/single-products" element={<SignleProduct />} />
+          <Route path="/single-product/:id" element={<SignleProduct />} />
           {/* <Route path="/settings" element={<Settings />} /> */}
         </Routes>
       </Box>

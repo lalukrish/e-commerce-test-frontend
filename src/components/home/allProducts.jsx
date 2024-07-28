@@ -1,7 +1,10 @@
 import React from "react";
 import { Grid, Box, Typography, Paper, Rating } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const AllProducts = () => {
+  const navigate = useNavigate();
+
   const products = [
     {
       id: 1,
@@ -61,38 +64,50 @@ const AllProducts = () => {
     },
   ];
 
+  const handleProductClick = (id) => {
+    navigate(`/single-product/${id}`);
+  };
+
   return (
-    <Grid container spacing={2} sx={{ p: 2 }}>
-      {products.map((product) => (
-        <Grid item xs={6} md={3} key={product.id}>
-          <Paper
-            elevation={3}
-            sx={{
-              padding: 2,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Box
-              component="img"
-              src={product.img}
-              alt={product.name}
+    <Grid>
+      <Typography sx={{ marginLeft: 12, fontSize: 32, fontWeight: 600 }}>
+        Today Hot Deals
+      </Typography>
+
+      <Grid container spacing={2} sx={{ p: 2 }}>
+        {products.map((product) => (
+          <Grid item xs={6} md={3} key={product.id}>
+            <Paper
+              elevation={3}
               sx={{
-                width: "100%",
-                height: "150px",
-                objectFit: "cover",
-                marginBottom: 2,
+                padding: 2,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                cursor: "pointer",
               }}
-            />
-            <Typography variant="h6">{product.name}</Typography>
-            <Typography variant="body1" color="textSecondary">
-              {product.price}
-            </Typography>
-            <Rating value={product.rating} readOnly />
-          </Paper>
-        </Grid>
-      ))}
+              onClick={() => handleProductClick(product.id)}
+            >
+              <Box
+                component="img"
+                src={product.img}
+                alt={product.name}
+                sx={{
+                  width: "100%",
+                  height: "150px",
+                  objectFit: "cover",
+                  marginBottom: 2,
+                }}
+              />
+              <Typography variant="h6">{product.name}</Typography>
+              <Typography variant="body1" color="textSecondary">
+                {product.price}
+              </Typography>
+              <Rating value={product.rating} readOnly />
+            </Paper>
+          </Grid>
+        ))}
+      </Grid>
     </Grid>
   );
 };

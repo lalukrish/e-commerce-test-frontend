@@ -137,6 +137,7 @@ export default function Sidebar({ onSidebarToggle }) {
           </Grid>
         </Toolbar>
       </AppBar>
+
       <Drawer
         sx={{
           width: 0,

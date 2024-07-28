@@ -16,7 +16,10 @@ const Home = () => {
           <AllProductsNavBar />
         </Box>
         <HomeCarousel />
-        <AllProducts />
+        <Box sx={{ mt: 10 }}>
+          {" "}
+          <AllProducts />
+        </Box>
       </Box>
     </>
   );
