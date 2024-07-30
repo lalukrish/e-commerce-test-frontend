@@ -17,10 +17,12 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
-import InputBase from "@mui/material/InputBase";
-import SearchIcon from "@mui/icons-material/Search";
+import Avatar from "@mui/material/Avatar";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import Grid from "@mui/material/Grid";
 import { Link as RouterLink } from "react-router-dom";
+import { Typography } from "@mui/material";
 
 const drawerWidth = 240;
 
@@ -35,7 +37,7 @@ const Main = styled("main")(({ theme }) => ({
 }));
 
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
-  backgroundColor: "#ff9800", // Change this to your desired color
+  backgroundColor: "#ff9800",
   position: "fixed",
   width: "100%",
   zIndex: theme.zIndex.appBar,
@@ -44,53 +46,15 @@ const AppBar = styled(MuiAppBar)(({ theme }) => ({
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
-  //padding: theme.spacing(0, 1),
   ...theme.mixins.toolbar,
   justifyContent: "flex-end",
-}));
-
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: theme.palette.common.white,
-  "&:hover": {
-    backgroundColor: theme.palette.grey[200],
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(3),
-    width: "auto",
-  },
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
-  },
 }));
 
 export default function Sidebar({ onSidebarToggle }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const isMenuOpen = Boolean(anchorEl);
 
   React.useEffect(() => {
     if (onSidebarToggle) {
@@ -104,6 +68,14 @@ export default function Sidebar({ onSidebarToggle }) {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const handleAvatarClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
   };
 
   return (
@@ -124,15 +96,30 @@ export default function Sidebar({ onSidebarToggle }) {
               </IconButton>
             </Grid>
             <Grid item>
-              <Search>
-                <SearchIconWrapper>
-                  <SearchIcon />
-                </SearchIconWrapper>
-                <StyledInputBase
-                  placeholder="Search…"
-                  inputProps={{ "aria-label": "search" }}
-                />
-              </Search>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Typography variant="body1" sx={{ marginRight: 2 }}>
+                  user@example.com
+                </Typography>
+                <IconButton onClick={handleAvatarClick} sx={{ padding: 0 }}>
+                  <Avatar alt="User Avatar" />
+                </IconButton>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={isMenuOpen}
+                  onClose={handleMenuClose}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                >
+                  <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
+                  <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+                </Menu>
+              </Box>
             </Grid>
           </Grid>
         </Toolbar>

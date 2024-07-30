@@ -1,8 +1,18 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { AppBar, Toolbar, IconButton, Grid, Box, Badge } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Grid,
+  Box,
+  Badge,
+  InputBase,
+  alpha,
+} from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import SearchIcon from "@mui/icons-material/Search";
 
 const AllProductsNavBar = () => {
   const cartCount = useSelector((state) => state.cart.items.length);
@@ -16,6 +26,43 @@ const AllProductsNavBar = () => {
           elevation={1}
         >
           <Toolbar>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box
+                sx={{
+                  position: "relative",
+                  borderRadius: 1,
+                  backgroundColor: alpha("#000", 0.15),
+                  "&:hover": {
+                    backgroundColor: alpha("#000", 0.25),
+                  },
+                  marginRight: 2,
+                  marginLeft: 0,
+                  width: "auto",
+                }}
+              >
+                <Box
+                  sx={{
+                    padding: 1,
+                    height: "100%",
+                    position: "absolute",
+                    pointerEvents: "none",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <SearchIcon />
+                </Box>
+                <InputBase
+                  placeholder="Search…"
+                  sx={{
+                    color: "inherit",
+                    paddingLeft: 4,
+                    width: "100%",
+                  }}
+                />
+              </Box>
+            </Box>
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
               <IconButton color="primary" sx={{ marginRight: 1 }}>
