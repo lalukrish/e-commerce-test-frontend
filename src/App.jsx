@@ -5,10 +5,12 @@ import Home from "./pages/Home";
 import Box from "@mui/material/Box";
 import Sidebar from "./components/sidebar";
 import SignleProduct from "./components/single-product";
+import { Provider } from "react-redux";
 
 function App() {
   return (
     // <Router>
+    // <Provider store={store}>
     <Box sx={{ display: "flex" }}>
       <Sidebar />
       <Box
@@ -27,6 +29,7 @@ function App() {
         </Routes>
       </Box>
     </Box>
+    // </Provider>
     // </Router>
   );
 }
