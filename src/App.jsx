@@ -6,6 +6,10 @@ import Box from "@mui/material/Box";
 import Sidebar from "./components/sidebar";
 import SignleProduct from "./components/single-product";
 import { Provider } from "react-redux";
+import SignupPage from "./pages/signup";
+import SigninPage from "./pages/signin";
+import Products from "./pages/products";
+import AddProduct from "./components/prodcuts/addProduct";
 
 function App() {
   return (
@@ -25,7 +29,10 @@ function App() {
         <Routes>
           <Route path="/home" element={<Home />} />
           <Route path="/single-product/:id" element={<SignleProduct />} />
-          {/* <Route path="/settings" element={<Settings />} /> */}
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/login" element={<SigninPage />} />
+          <Route path="/all-products" element={<Products />} />
+          <Route path="/add-product" element={<AddProduct />} />
         </Routes>
       </Box>
     </Box>
