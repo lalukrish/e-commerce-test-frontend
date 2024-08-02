@@ -37,15 +37,12 @@ const SigninForm = () => {
         );
         setAlertType("success");
         setAlertMessage(response.data.message);
+        localStorage.setItem("USER_ID", response.data.user.id);
         setTimeout(() => {
           navigate("/home"); // Redirect to dashboard or another page after successful login
         }, 2000); // Redirect after 2 seconds
       } catch (error) {
         if (error.response && error.response.status === 401) {
-          setErrors({
-            email: "Invalid credentials",
-            password: "Invalid credentials",
-          });
           setAlertType("error");
           setAlertMessage("Invalid credentials");
         } else {

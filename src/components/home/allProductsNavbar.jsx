@@ -1,5 +1,5 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   AppBar,
   Toolbar,
@@ -13,10 +13,18 @@ import {
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import SearchIcon from "@mui/icons-material/Search";
+import { fetchCart } from "../../redux/reducers/getCartSlice";
 
 const AllProductsNavBar = () => {
-  const cartCount = useSelector((state) => state.cart.items.length);
+  const dispatch = useDispatch();
+  const userId = localStorage.getItem("USER_ID");
 
+  useEffect(() => {
+    dispatch(fetchCart(userId));
+  }, [dispatch, userId]);
+
+  const cartCount = useSelector((state) => state.getCart.items.length);
+  console.log("object", cartCount);
   return (
     <Grid container direction="column">
       <Grid item>

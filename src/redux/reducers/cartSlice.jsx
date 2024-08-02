@@ -1,33 +1,43 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
-const initialState = {
-  items: [],
-};
+export const addToCart = createAsyncThunk(
+  "cart/addToCart",
+  async ({ userId, productId, quantity }) => {
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_POINT}/product/add-to-cart`,
+      {
+        userId,
+        productId,
+        quantity,
+      }
+    );
+    return response.data.cart;
+  }
+);
 
-console.log("inita", initialState);
 const cartSlice = createSlice({
   name: "cart",
-  initialState,
-  reducers: {
-    addToCart: (state, action) => {
-      const existingItem = state.items.find(
-        (item) => item.id === action.payload.id
-      );
-      if (existingItem) {
-        existingItem.quantity += action.payload.quantity;
-      } else {
-        state.items.push(action.payload);
-      }
-    },
-    updateCartQuantity: (state, action) => {
-      const item = state.items.find((item) => item.id === action.payload.id);
-      if (item) {
-        item.quantity = action.payload.quantity;
-      }
-    },
+  initialState: {
+    items: [],
+    status: "idle",
+    error: null,
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(addToCart.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(addToCart.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.items = action.payload.items;
+      })
+      .addCase(addToCart.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
   },
 });
-
-export const { addToCart, updateCartQuantity } = cartSlice.actions;
 
 export default cartSlice.reducer;

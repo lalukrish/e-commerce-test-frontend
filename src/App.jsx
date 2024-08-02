@@ -10,6 +10,7 @@ import SignupPage from "./pages/signup";
 import SigninPage from "./pages/signin";
 import Products from "./pages/products";
 import AddProduct from "./components/prodcuts/addProduct";
+import Cart from "./pages/cart";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="/login" element={<SigninPage />} />
           <Route path="/all-products" element={<Products />} />
           <Route path="/add-product" element={<AddProduct />} />
+          <Route path="/cart" element={<Cart />} />
         </Routes>
       </Box>
     </Box>

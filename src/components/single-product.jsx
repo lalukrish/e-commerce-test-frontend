@@ -21,6 +21,7 @@ import { addToCart } from "../redux/reducers/cartSlice";
 const SingleProduct = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const userId = localStorage.getItem("USER_ID");
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState("orange");
   const [selectedMemory, setSelectedMemory] = useState("128GB");
@@ -42,7 +43,7 @@ const SingleProduct = () => {
   }, [id]);
 
   const handleAddToCart = () => {
-    dispatch(addToCart({ ...product, quantity }));
+    dispatch(addToCart({ userId, productId: product._id, quantity }));
   };
 
   const handleBuyNow = () => {};
@@ -67,7 +68,7 @@ const SingleProduct = () => {
       spacing={2}
       sx={{
         maxWidth: 800,
-        margin: "0 auto",
+        margin: { md: "0 auto" },
         padding: 2,
         justifyContent: "center",
         alignItems: "center",
