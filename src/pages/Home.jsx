@@ -6,7 +6,7 @@ import AllProducts from "../components/home/allProducts";
 const Home = () => {
   return (
     <>
-      <Box sx={{ mt: 10 }}>
+      <Box>
         <Box
           sx={{
             width: { xs: "100%", md: "900px", lg: "1200px" },
@@ -16,7 +16,7 @@ const Home = () => {
           <AllProductsNavBar />
         </Box>
         <HomeCarousel />
-        <Box sx={{ mt: 10 }}>
+        <Box>
           {" "}
           <AllProducts />
         </Box>

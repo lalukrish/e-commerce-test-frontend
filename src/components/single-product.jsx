@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import axios from "axios";
 import {
   Box,
   Typography,
@@ -23,16 +24,22 @@ const SingleProduct = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState("orange");
   const [selectedMemory, setSelectedMemory] = useState("128GB");
+  const [product, setProduct] = useState(null);
 
-  const product = {
-    id,
-    name: "Product " + id,
-    price: `$${id * 10}.00`,
-    priceValue: id * 10,
-    rating: parseInt(id) % 5,
-    img: "https://via.placeholder.com/300",
-    description: `This is a detailed description of Product ${id}. It is a great product with excellent features and benefits.`,
+  const fetchProduct = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_POINT}/product/get-single-product/${id}`
+      );
+      setProduct(response.data);
+    } catch (error) {
+      console.error("Error fetching product:", error);
+    }
   };
+
+  useEffect(() => {
+    fetchProduct();
+  }, [id]);
 
   const handleAddToCart = () => {
     dispatch(addToCart({ ...product, quantity }));
@@ -50,11 +57,22 @@ const SingleProduct = () => {
     }
   };
 
+  if (!product) {
+    return <Typography>Loading...</Typography>;
+  }
+
   return (
     <Grid
       container
       spacing={2}
-      sx={{ maxWidth: 800, margin: "0 auto", padding: 2 }}
+      sx={{
+        maxWidth: 800,
+        margin: "0 auto",
+        padding: 2,
+        justifyContent: "center",
+        alignItems: "center",
+        alignContent: "center",
+      }}
     >
       <Grid item xs={12} md={6}>
         <Paper
@@ -63,26 +81,12 @@ const SingleProduct = () => {
         >
           <Box
             component="img"
-            src={product.img}
+            src={product.image.url}
             alt={product.name}
             sx={{ width: "100%", height: "auto", marginBottom: 2 }}
           />
-          <IconButton
-            color="primary"
-            aria-label="edit product"
-            sx={{
-              position: "absolute",
-              top: 10,
-              right: 10,
-              backgroundColor: "#ffffff",
-              "&:hover": {
-                backgroundColor: "#f5f5f5",
-              },
-            }}
-          >
-            <EditIcon />
-          </IconButton>
-          <Typography variant="h4" sx={{ marginBottom: 2 }}>
+
+          <Typography variant="h4" sx={{ marginBottom: 2, fontWeight: "bold" }}>
             {product.name}
           </Typography>
           <Typography
@@ -90,7 +94,7 @@ const SingleProduct = () => {
             color="textSecondary"
             sx={{ marginBottom: 2 }}
           >
-            {product.price}
+            ${product.price}
           </Typography>
           <Typography variant="body1" sx={{ marginBottom: 2 }}>
             {product.description}
@@ -179,7 +183,7 @@ const SingleProduct = () => {
             }}
           >
             <Typography variant="h6">
-              Total: ${product.priceValue * quantity}.00
+              Total: ${product.price * quantity}.00
             </Typography>
           </Box>
 

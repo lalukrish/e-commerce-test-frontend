@@ -155,7 +155,7 @@ export default function Sidebar({ onSidebarToggle }) {
         <List>
           {[
             { text: "Home", path: "/home" },
-            { text: "Products", path: "/products" },
+            { text: "Products", path: "/all-products" },
             { text: "Settings", path: "/settings" },
           ].map((item, index) => (
             <ListItem

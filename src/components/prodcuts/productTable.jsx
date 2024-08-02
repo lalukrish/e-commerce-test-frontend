@@ -14,12 +14,19 @@ import {
   Button,
   Alert,
   Box,
+  TextField,
+  Grid,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ToggleOffIcon from "@mui/icons-material/ToggleOff";
 import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 import AddProductModal from "./addProduct";
+import EditProductModal from "./ediProduct";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dayjs from "dayjs";
 
 const ProductTable = () => {
   const [products, setProducts] = useState([]);
@@ -27,14 +34,25 @@ const ProductTable = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [alert, setAlert] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   const fetchProducts = async (page, limit) => {
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_API_POINT}/product/get-all-products`,
         {
-          params: { page: page + 1, limit }, // API expects 1-based page number
+          params: {
+            page: page + 1,
+            limit,
+            search: searchTerm,
+            startDate: startDate ? startDate.toISOString() : undefined,
+            endDate: endDate ? endDate.toISOString() : undefined,
+          },
         }
       );
       setProducts(response.data.products);
@@ -46,7 +64,7 @@ const ProductTable = () => {
 
   useEffect(() => {
     fetchProducts(page, rowsPerPage);
-  }, [page, rowsPerPage]);
+  }, [page, rowsPerPage, searchTerm, startDate, endDate]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -57,9 +75,9 @@ const ProductTable = () => {
     setPage(0); // Reset page to 0 when rows per page changes
   };
 
-  const handleEdit = (id) => {
-    // Handle edit logic here
-    console.log("Edit product with id:", id);
+  const handleEdit = (product) => {
+    setSelectedProduct(product);
+    setEditModalOpen(true);
   };
 
   const handleDelete = async (id) => {
@@ -97,98 +115,177 @@ const ProductTable = () => {
     }
   };
 
+  const handleClearFilters = () => {
+    setSearchTerm("");
+    setStartDate(null);
+    setEndDate(null);
+  };
+
   return (
     <Box>
       {alert && <Alert severity={alert.severity}>{alert.message}</Alert>}
-      <Box sx={{ display: "flex", justifyContent: "flex-end", p: 2 }}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setModalOpen(true)}
+      <Box sx={{ p: 2 }}>
+        <Grid
+          container
+          spacing={2}
+          alignItems="center"
+          justifyContent="space-between"
         >
-          Add New Product
-        </Button>
+          <Grid
+            item
+            xs={12}
+            md={8}
+            lg={9}
+            container
+            spacing={2}
+            alignItems="center"
+          >
+            <Grid item xs={12} sm={6} md={4} lg={3}>
+              <TextField
+                label="Search"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4} lg={3}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="Start Date"
+                  value={startDate}
+                  onChange={(newValue) => setStartDate(newValue)}
+                  renderInput={(params) => <TextField {...params} fullWidth />}
+                />
+              </LocalizationProvider>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4} lg={3}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="End Date"
+                  value={endDate}
+                  onChange={(newValue) => setEndDate(newValue)}
+                  renderInput={(params) => <TextField {...params} fullWidth />}
+                />
+              </LocalizationProvider>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4} lg={3}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleClearFilters}
+                fullWidth
+              >
+                Clear Filters
+              </Button>
+            </Grid>
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            md={4}
+            lg={3}
+            sx={{ textAlign: { xs: "center", md: "right" } }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setModalOpen(true)}
+              fullWidth
+            >
+              Add New Product
+            </Button>
+          </Grid>
+        </Grid>
       </Box>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Image</TableCell>
-              <TableCell>Product Name</TableCell>
-              <TableCell>Review</TableCell>
-              <TableCell>Color</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Options</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {products.map((product) => (
-              <TableRow key={product._id}>
-                <TableCell>
-                  <img
-                    src={product.image.url}
-                    alt={product.name}
-                    style={{ width: 50, height: 50, objectFit: "cover" }}
-                  />
-                </TableCell>
-                <TableCell>{product.name}</TableCell>
-                <TableCell>{product.review}</TableCell>
-                <TableCell>{product.color}</TableCell>
-                <TableCell>
-                  {product.status ? (
-                    <Tooltip title="Deactivate">
+      <Box
+        sx={{
+          width: { xs: 350, sm: "100%", md: "100%", lg: "100%", xl: "100%" },
+        }}
+      >
+        <TableContainer component={Paper}>
+          <Box sx={{ overflowX: "auto" }}>
+            <Table sx={{ minWidth: 600 }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Image</TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Review</TableCell>
+                  <TableCell>Color</TableCell>
+                  <TableCell>Price</TableCell>
+                  <TableCell>Description</TableCell>
+                  <TableCell>Variant</TableCell>
+                  <TableCell>Status</TableCell>
+                  <TableCell>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {products.map((product) => (
+                  <TableRow key={product._id}>
+                    <TableCell>
+                      <img
+                        src={product.image.url}
+                        alt={product.name}
+                        style={{ width: 50, height: 50, objectFit: "cover" }}
+                      />
+                    </TableCell>
+                    <TableCell>{product.name}</TableCell>
+                    <TableCell>{product.review}</TableCell>
+                    <TableCell>{product.color}</TableCell>
+                    <TableCell>{product.price}</TableCell>
+                    <TableCell>{product.description}</TableCell>
+                    <TableCell>{product.variant}</TableCell>
+                    <TableCell>
                       <IconButton
                         onClick={() =>
                           handleToggleActive(product._id, product.status)
                         }
                       >
-                        <ToggleOnIcon color="success" />
+                        {product.status ? <ToggleOnIcon /> : <ToggleOffIcon />}
                       </IconButton>
-                    </Tooltip>
-                  ) : (
-                    <Tooltip title="Activate">
-                      <IconButton
-                        onClick={() =>
-                          handleToggleActive(product._id, product.status)
-                        }
-                      >
-                        <ToggleOffIcon color="warning" />
-                      </IconButton>
-                    </Tooltip>
-                  )}
-                </TableCell>
-                <TableCell>
-                  <Tooltip title="Edit">
-                    <IconButton onClick={() => handleEdit(product._id)}>
-                      <EditIcon color="primary" />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Delete">
-                    <IconButton onClick={() => handleDelete(product._id)}>
-                      <DeleteIcon color="error" />
-                    </IconButton>
-                  </Tooltip>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 50]}
-          component="div"
-          count={totalPages * rowsPerPage}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </TableContainer>
+                    </TableCell>
+                    <TableCell>
+                      <Tooltip title="Edit">
+                        <IconButton onClick={() => handleEdit(product)}>
+                          <EditIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Delete">
+                        <IconButton onClick={() => handleDelete(product._id)}>
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Box>
+          <TablePagination
+            component="div"
+            count={totalPages * rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </TableContainer>
+      </Box>
+
       <AddProductModal
         open={modalOpen}
         handleClose={() => setModalOpen(false)}
-        fetchProducts={fetchProducts}
+        fetchProducts={() => fetchProducts(page, rowsPerPage)}
         setAlert={setAlert}
       />
+      {selectedProduct && (
+        <EditProductModal
+          open={editModalOpen}
+          handleClose={() => setEditModalOpen(false)}
+          product={selectedProduct}
+          fetchProducts={() => fetchProducts(page, rowsPerPage)}
+          setAlert={setAlert}
+        />
+      )}
     </Box>
   );
 };
