@@ -58,6 +58,9 @@ const SigninForm = () => {
     },
   });
 
+  const handleSignup = () => {
+    navigate("/signup");
+  };
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -118,7 +121,11 @@ const SigninForm = () => {
           </Button>
         </Box>
         <Typography>
-          don't have an account? <a href="/signup">Signup</a>
+          don't have an account?{" "}
+          <Button sx={{ color: "violet" }} onClick={handleSignup}>
+            {" "}
+            Signup
+          </Button>
         </Typography>
       </Box>
     </Container>
