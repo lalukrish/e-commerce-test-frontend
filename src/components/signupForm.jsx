@@ -51,8 +51,8 @@ const Signup = () => {
         setAlertMessage(response.data.message);
         resetForm();
         setTimeout(() => {
-          navigate("/login");
-        }, 2000); // Redirect to login page after 2 seconds
+          navigate("/");
+        }, 2000); 
       } catch (error) {
         if (error.response && error.response.status === 400) {
           setErrors({ email: error.response.data.message });

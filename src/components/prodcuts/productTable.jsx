@@ -29,6 +29,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
 
 const ProductTable = () => {
+  const token = localStorage.getItem("token");
+
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -53,6 +55,9 @@ const ProductTable = () => {
             startDate: startDate ? startDate.toISOString() : undefined,
             endDate: endDate ? endDate.toISOString() : undefined,
           },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       setProducts(response.data.products);
@@ -72,7 +77,7 @@ const ProductTable = () => {
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // Reset page to 0 when rows per page changes
+    setPage(0); 
   };
 
   const handleEdit = (product) => {
@@ -83,7 +88,12 @@ const ProductTable = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(
-        `${import.meta.env.VITE_API_POINT}/product/delete-product/${id}`
+        `${import.meta.env.VITE_API_POINT}/product/delete-product/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       setProducts(products.filter((product) => product._id !== id));
       console.log("Deleted product with id:", id);
@@ -98,6 +108,11 @@ const ProductTable = () => {
         `${import.meta.env.VITE_API_POINT}/product/product-status/${id}`,
         {
           status: !isActive,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       setProducts(

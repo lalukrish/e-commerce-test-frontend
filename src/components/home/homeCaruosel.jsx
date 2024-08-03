@@ -81,7 +81,7 @@ const HomeCarousel = () => {
               alt={item.header}
               sx={{
                 width: { xs: "200px", sm: "300px", md: "400px" },
-                height: { xs: "200px", sm: "300px", md: "400px" }, // Fixed height for images
+                height: { xs: "200px", sm: "300px", md: "400px" }, 
                 objectFit: "cover",
                 mt: 2,
               }}

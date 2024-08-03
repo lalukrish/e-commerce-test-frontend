@@ -4,12 +4,19 @@ import axios from "axios";
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
   async ({ userId, productId, quantity }) => {
+    const token = localStorage.getItem("token");
+
     const response = await axios.post(
       `${import.meta.env.VITE_API_POINT}/product/add-to-cart`,
       {
         userId,
         productId,
         quantity,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
     return response.data.cart;

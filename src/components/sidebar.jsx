@@ -21,7 +21,7 @@ import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Grid from "@mui/material/Grid";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { Typography } from "@mui/material";
 
 const drawerWidth = 240;
@@ -51,6 +51,8 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 export default function Sidebar({ onSidebarToggle }) {
+  const emailId = localStorage.getItem("EMAIL_ID");
+  const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -78,6 +80,11 @@ export default function Sidebar({ onSidebarToggle }) {
     setAnchorEl(null);
   };
 
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
+  };
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -98,7 +105,7 @@ export default function Sidebar({ onSidebarToggle }) {
             <Grid item>
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Typography variant="body1" sx={{ marginRight: 2 }}>
-                  user@example.com
+                  {emailId}
                 </Typography>
                 <IconButton onClick={handleAvatarClick} sx={{ padding: 0 }}>
                   <Avatar alt="User Avatar" />
@@ -117,7 +124,7 @@ export default function Sidebar({ onSidebarToggle }) {
                   }}
                 >
                   <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
-                  <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+                  <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>
               </Box>
             </Grid>
@@ -156,7 +163,9 @@ export default function Sidebar({ onSidebarToggle }) {
           {[
             { text: "Home", path: "/home" },
             { text: "Products", path: "/all-products" },
-            { text: "Settings", path: "/settings" },
+            { text: "Cart", path: "/cart" },
+
+            // { text: "Settings", path: "" },
           ].map((item, index) => (
             <ListItem
               key={item.text}

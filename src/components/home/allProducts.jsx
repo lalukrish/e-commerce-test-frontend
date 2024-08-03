@@ -7,6 +7,7 @@ import { isInteger } from "formik";
 const AllProducts = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
+  const token = localStorage.getItem("token");
 
   const fetchProducts = async () => {
     try {
@@ -15,6 +16,9 @@ const AllProducts = () => {
         {
           params: {
             status: true,
+          },
+          headers: {
+            Authorization: `Bearer ${token}`, 
           },
         }
       );

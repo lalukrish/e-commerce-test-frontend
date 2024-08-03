@@ -38,9 +38,12 @@ const SigninForm = () => {
         setAlertType("success");
         setAlertMessage(response.data.message);
         localStorage.setItem("USER_ID", response.data.user.id);
+        localStorage.setItem("EMAIL_ID", response.data.user.email);
+        localStorage.setItem("token", response.data.token);
+
         setTimeout(() => {
-          navigate("/home"); // Redirect to dashboard or another page after successful login
-        }, 2000); // Redirect after 2 seconds
+          navigate("/home"); 
+        }, 2000); 
       } catch (error) {
         if (error.response && error.response.status === 401) {
           setAlertType("error");

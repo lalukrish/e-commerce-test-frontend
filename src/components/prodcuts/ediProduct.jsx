@@ -19,6 +19,8 @@ const EditProductModal = ({
   fetchProducts,
   setAlert,
 }) => {
+  const token = localStorage.getItem("token");
+
   const [fileName, setFileName] = useState("");
   const [image, setImage] = useState(null);
 
@@ -62,6 +64,7 @@ const EditProductModal = ({
           {
             headers: {
               "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
             },
           }
         );

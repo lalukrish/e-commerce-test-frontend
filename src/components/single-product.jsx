@@ -28,9 +28,16 @@ const SingleProduct = () => {
   const [product, setProduct] = useState(null);
 
   const fetchProduct = async () => {
+    const token = localStorage.getItem("token");
+
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_POINT}/product/get-single-product/${id}`
+        `${import.meta.env.VITE_API_POINT}/product/get-single-product/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       setProduct(response.data);
     } catch (error) {

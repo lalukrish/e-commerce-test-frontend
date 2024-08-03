@@ -17,6 +17,8 @@ const AddProductSchema = Yup.object().shape({
 });
 
 const AddProductModal = ({ open, handleClose, fetchProducts, setAlert }) => {
+  const token = localStorage.getItem("token");
+
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     const formData = new FormData();
     formData.append("name", values.name);
@@ -30,12 +32,17 @@ const AddProductModal = ({ open, handleClose, fetchProducts, setAlert }) => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_POINT}/product/create-product`,
-        formData
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       setAlert({ message: response.data.message, severity: "success" });
-      fetchProducts(0, 10); // Fetch products again to include the new one
+      fetchProducts(0, 10);
       resetForm();
-      handleClose(); // Close the modal
+      handleClose();
     } catch (error) {
       setAlert({ message: "Error creating product", severity: "error" });
     } finally {
@@ -51,9 +58,9 @@ const AddProductModal = ({ open, handleClose, fetchProducts, setAlert }) => {
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: 600,
+          // width: 600,
           bgcolor: "background.paper",
-          border: "2px solid #000",
+          // border: "2px solid #000",
           boxShadow: 24,
           p: 4,
         }}

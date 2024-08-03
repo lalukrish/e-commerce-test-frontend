@@ -30,21 +30,21 @@ const CartPage = () => {
         ) : (
           <Grid container spacing={2}>
             {items.map((item) => (
-              <Grid item xs={12} md={6} key={item._id}>
+              <Grid item xs={12} md={6} key={item?._id}>
                 <Paper elevation={3} sx={{ padding: 2, display: "flex" }}>
                   <Box
                     component="img"
-                    src={item.productId.image.url}
-                    alt={item.productId.name}
+                    src={item?.productId?.image.url}
+                    alt={item.productId?.name}
                     sx={{ width: 100, height: 100, marginRight: 2 }}
                   />
                   <Box>
-                    <Typography variant="h6">{item.productId.name}</Typography>
+                    <Typography variant="h6">{item?.productId?.name}</Typography>
                     <Typography variant="body1">
-                      Quantity: {item.quantity}
+                      Quantity: {item?.quantity}
                     </Typography>
                     <Typography variant="body1">
-                      Price: ${item.productId.price}
+                      Price: ${item?.productId?.price}
                     </Typography>
                   </Box>
                 </Paper>
