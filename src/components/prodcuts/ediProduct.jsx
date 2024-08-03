@@ -35,7 +35,11 @@ const EditProductModal = ({
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Product name is required"),
-      review: Yup.string().required("Review is required"),
+      review: Yup.number()
+        .required("Review is required")
+        .min(1, "Review must be at least 1")
+        .max(5, "Review must be at most 5")
+        .integer("Review must be an integer"),
       color: Yup.string().required("Color is required"),
       price: Yup.number()
         .required("Price is required")
