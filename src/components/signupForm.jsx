@@ -52,7 +52,7 @@ const Signup = () => {
         resetForm();
         setTimeout(() => {
           navigate("/");
-        }, 2000); 
+        }, 2000);
       } catch (error) {
         if (error.response && error.response.status === 400) {
           setErrors({ email: error.response.data.message });
@@ -196,6 +196,9 @@ const Signup = () => {
             Sign Up
           </Button>
         </Box>
+        <Typography>
+          already have an account? <a href="/">Login</a>
+        </Typography>
       </Box>
     </Container>
   );

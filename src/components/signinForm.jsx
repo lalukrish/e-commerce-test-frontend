@@ -42,8 +42,8 @@ const SigninForm = () => {
         localStorage.setItem("token", response.data.token);
 
         setTimeout(() => {
-          navigate("/home"); 
-        }, 2000); 
+          navigate("/home");
+        }, 2000);
       } catch (error) {
         if (error.response && error.response.status === 401) {
           setAlertType("error");
@@ -117,6 +117,9 @@ const SigninForm = () => {
             Sign In
           </Button>
         </Box>
+        <Typography>
+          don't have an account? <a href="/signup">Signup</a>
+        </Typography>
       </Box>
     </Container>
   );

@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import Home from "./pages/Home";
 // import Settings from "./components/Settings";
 import Box from "@mui/material/Box";
@@ -13,11 +18,16 @@ import AddProduct from "./components/prodcuts/addProduct";
 import Cart from "./pages/cart";
 
 function App() {
+  const location = useLocation();
+
+  const noSidebarRoutes = ["/", "/signup"];
+  const showSidebar = !noSidebarRoutes.includes(location.pathname);
+
   return (
     // <Router>
     // <Provider store={store}>
     <Box sx={{ display: "flex" }}>
-      <Sidebar />
+      {showSidebar && <Sidebar />}
       <Box
         sx={{
           flexGrow: 1,
